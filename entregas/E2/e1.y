@@ -12,8 +12,8 @@
 extern int yylineno;
 extern char* yytext;
 
-void yyerror(const char* msg) {
-      fprintf(stderr, "Erro Lexico na linha: %d char: %s\n, yylineno, yytext);
+void yyerror(const char* msg) 
+      fprintf(stderr, "Erro Lexico na linha: %d char: %s\n", yylineno, yytext);
 }
 
 int yylex();
@@ -39,48 +39,50 @@ int yylex();
 
 %%
 
-program: 
-/* void */
 
-%%
+program : declaration-list compound-stmt
+;
 
+declaration-list : declaration-list declaration | declaration
+;
 
-program : declarationMINUSlist compoundMINUSstmt
-
-declarationMINUSlist : declarationMINUSlist declaration | declaration
-
-declaration : varMINUSdeclaration | constMINUSdeclaration 
-
-varMINUSdeclaration : typeMINUSspecifier ID ; 
-
-typeMINUSspecifier : INT | VOID
-
-constMINUSdeclaration : CONST typeMINUSspecifier ID  NUM ;
+declaration : var-declaration | const-declaration 
+;
+var-declaration : type-specifier ID SEMICOLON
+;
+type-specifier : INT | VOID
+;
+const-declaration : CONST type-specifier ID  NUM SEMICOLON
+;
 
 
+compound-stmt :  local-declarations statement-list         // ERRATA: com chaves
+;
+local-declarations : local-declarations var-declaration |  /* empty */
+;
+statement-list : statement-list statement | /* empty */
+;
+statement : expression-stmt | return-stmt
+;
+expression-stmt : expression SEMICOLON | SEMICOLON
+;
+return-stmt : RETURN SEMICOLON | RETURN expression SEMICOLON
+;
 
-compoundMINUSstmt : { localMINUSdeclarations statementMINUSlist }        // ERRATA: com chaves
 
-localMINUSdeclarations : localMINUSdeclarations varMINUSdeclaration |  /* empty */
-
-statementMINUSlist : statementMINUSlist statement | /* empty */
-
-statement : expressionMINUSstmt | returnMINUSstmt
-
-expressionMINUSstmt : expression ; | ;
-
-returnMINUSstmt : return ; | return expression ;
-
-
-
-expression : ID  additiveMINUSexpression
-
-additiveMINUSexpression : additiveMINUSexpression addop term | term
+expression : ID  additive-expression
+;
+additive-expression : additive-expression addop term | term
+;
 
 addop : PLUS | MINUS
+;
 
 term : term mulop factor | factor
+;
 
 mulop : MULT | SLASH
+;
 
-factor : ( expression ) | ID | NUM
+factor : OPARENT expression CPARENT | ID | NUM
+;
