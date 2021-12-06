@@ -28,7 +28,7 @@ void                 { return VOID; }
 
 [ \n\t]+              { /* void */ }
 
-.                     {  fprintf(stdout,"Error léxico na linha %d ", yylineno); fprintf(stdout," on char: %s\n", yytext); }  
+.                     {  fprintf(stdout,"Erros léxicos na linha %d ", yylineno); fprintf(stdout," on char: %s\n", yytext); }  
 
 %%
 
@@ -43,18 +43,18 @@ int main(int argc, char **argv) {
     
     char *token_name[14] = {"CONST", "INT", "RETURN","VOID","NUM","ID","PLUS", "MINUS",  "SLASH", "EQUAL", "MULT", "CPARENT", "OPARENT", "SEMICOLON"};
 
-    /*while ((token = yylex())) {
+     /*while ((token = yylex())) {
        fprintf(stdout,"token code: %d", token);
        fprintf(stdout,", token class: %s", token_name[token-258]);
        fprintf(stdout,", lexeme: %s\n", yytext);
     }*\
 
-        if (yyparse() == 0){
-            fprintf(stdout, "Verificação sem erros\n");
-        }
-        else {
-            fprintf(stdout, "Foram encontrados erros\n");
-        }
+    if (yyparse() == 0) {
+                fprintf(stdout, "Verificação Sem erros sintáticos\n");
 
-    }
+            } else {
+                
+                fprintf(stdout, "Foram encontrados Erros\n");
+            }
+
 }
